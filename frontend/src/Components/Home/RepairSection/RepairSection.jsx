@@ -1,3 +1,4 @@
+// src/Components/Home/RepairSection/RepairSection.jsx
 import { Link } from "react-router-dom";
 import { Wrench, ArrowRight } from "lucide-react";
 import SectionHeader from "../SectionHeader/SectionHeader";
@@ -15,9 +16,9 @@ export default function RepairSection({ services }) {
                 {s.image ? <img src={s.image} alt="" loading="lazy" /> : <span aria-hidden="true">{s.emoji}</span>}
               </div>
               <h3 className={styles.name}>{s.name}</h3>
-              <p className={styles.tags}>{s.tags}</p>
+              <p className={styles.tags}>{Array.isArray(s.tags) ? s.tags.join(" · ") : s.tags}</p>
               <div className={styles.foot}>
-                <span>Starting <strong>₹{s.price}</strong></span>
+                <span>Starting <strong>₹{s.price.toLocaleString("en-IN")}</strong></span>
                 <span className={styles.go}><ArrowRight size={14} aria-hidden="true" /></span>
               </div>
             </Link>

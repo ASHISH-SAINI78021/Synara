@@ -8,24 +8,25 @@ import DealsSection from "../Components/Home/DealsSection/DealsSection.jsx";
 import BottomNav from "../Components/Home/BottomNav/BottomNav.jsx";
 import CategoryGrid from "../Components/CategoryGrid/CategoryGrid.jsx";
 import { slides, popular, accessories, repairs, deals, categoryGroups } from "../data/homeData.js";
+import { useCart } from "../Context/CartContext";
 import styles from "./Home.module.css";
 
 export default function Home() {
-  const [cartCount, setCartCount] = useState(0);
-  const addToCart = () => setCartCount((c) => c + 1); // replace with real cart logic
+  const { count, add } = useCart();
 
   return (
     <div className={styles.page}>
-      <Header cartCount={cartCount} />
+      <Header cartCount={count} />
       <main className={styles.main}>
         <HeroBanner slides={slides} />
+        
+        <ProductSection icon={<Zap size={26} fill="currentColor" />} title="Popular Electronics" to="/categories" products={popular} onAdd={add} />
+        <ProductSection icon={<Headphones size={26} />} title="Accessories" to="/categories" products={accessories} onAdd={add} />
         <CategoryGrid groups={categoryGroups} />
-        <ProductSection icon={<Zap size={26} fill="currentColor" />} title="Popular Electronics" to="/categories" products={popular} onAdd={addToCart} />
-        <ProductSection icon={<Headphones size={26} />} title="Accessories" to="/categories" products={accessories} onAdd={addToCart} />
         <RepairSection services={repairs} />
         <DealsSection deals={deals} />
       </main>
-      <BottomNav cartCount={cartCount} />
+      <BottomNav cartCount={count} />
     </div>
   );
 }

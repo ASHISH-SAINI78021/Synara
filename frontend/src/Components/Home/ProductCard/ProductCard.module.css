@@ -1,4 +1,4 @@
-/* src/components/ProductCard/ProductCard.module.css */
+/* src/Components/Home/ProductCard/ProductCard.module.css */
 
 /* ---------- phones: 4 across, cart button 36px overlapping the product ---------- */
 .card {
@@ -26,20 +26,22 @@
   line-height: 1.4;
 }
 
-/* image area: the image fills it, the button floats above it */
+/* image area: FIXED height, every photo is fitted inside it */
 .media {
   position: relative;
-  display: grid;
-  place-items: center;
+  flex-shrink: 0;                   /* never squeezed or stretched */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 78px;
   margin: 16px 0 6px;
 }
 .media img {
   position: relative;
   z-index: 1;                       /* image layer */
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;              /* same box for all, no cropping */
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.14));
 }
 .emoji { position: relative; z-index: 1; font-size: 2.4rem; line-height: 1; }
@@ -64,7 +66,7 @@
 .add svg { width: 18px; height: 18px; }
 .add:active { transform: scale(0.92); }
 
-.prices { margin: 0; display: flex; flex-direction: column; line-height: 1.15; }
+.prices { margin: 0; flex-shrink: 0; display: flex; flex-direction: column; line-height: 1.15; }
 .prices strong { font-size: 0.76rem; font-weight: 800; }
 .prices del { font-size: 0.58rem; color: var(--muted); }
 
@@ -105,4 +107,26 @@
   .rating strong { color: var(--black); font-weight: 700; }
 }
 
+/* wide screens: cards are wider, so give the image a bit more room */
+@media (min-width: 1000px) {
+  .media { height: 112px; }
+}
+
 @media (prefers-reduced-motion: reduce) { .add { transition: none; } }
+
+
+
+/* links inside the card: no purple / underline, image link fills the image box */
+.imgLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.nameLink {
+  color: inherit;
+  text-decoration: none;
+}

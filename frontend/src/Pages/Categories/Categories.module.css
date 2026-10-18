@@ -1,0 +1,25 @@
+/* src/pages/Categories/Categories.module.css */
+.page { max-width: 1440px; margin: 0 auto; padding: 12px 12px 90px; /* room for the bottom nav */ }
+.title { margin: 0 0 10px; font-size: 1.15rem; font-weight: 800; }
+
+.search {
+  display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px;
+  border-radius: 999px; background: var(--white); border: 1px solid var(--line); color: var(--muted);
+}
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 0.9rem; color: var(--black); }
+.search:focus-within { border-color: var(--black); }
+
+/* this is a <Link>, so colour + underline are reset */
+.allRow {
+  display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px;
+  border-radius: 14px; background: linear-gradient(135deg, var(--soft-yellow), var(--light-bg));
+  color: var(--black); text-decoration: none;
+}
+.allIcon { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--yellow); }
+.allText { display: flex; flex-direction: column; flex: 1; line-height: 1.25; }
+.allText strong { font-size: 0.88rem; font-weight: 800; }
+.allText small { font-size: 0.7rem; color: var(--dark-grey); }
+
+.none { margin: 40px 0; text-align: center; font-size: 0.9rem; color: var(--muted); }
+
+@media (min-width: 900px) { .page { padding: 16px 20px 96px; } }

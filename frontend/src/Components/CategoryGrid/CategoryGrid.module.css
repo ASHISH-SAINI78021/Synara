@@ -1,3 +1,4 @@
+/* src/components/CategoryGrid/CategoryGrid.module.css */
 .group { margin-top: 18px; }
 
 .heading {
@@ -25,7 +26,7 @@
   text-decoration: none;
 }
 
-/* tinted rounded square */
+/* rounded square: white with a thin border (no yellow) */
 .tile {
   display: grid;
   place-items: center;
@@ -33,7 +34,8 @@
   aspect-ratio: 1;
   padding: 8px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--soft-yellow), var(--light-bg));
+  background: var(--white);
+  border: 1px solid var(--line);
   transition: transform 160ms ease;
 }
 .item:hover .tile { transform: translateY(-2px); }
