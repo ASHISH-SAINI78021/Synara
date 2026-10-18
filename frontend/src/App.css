@@ -1,0 +1,188 @@
+/* Synara brand tokens */
+.screen {
+  --yellow: #ffd600;
+  --black: #0d0d0d;
+  --dark-grey: #1f1f1f;
+  --light-bg: #fff9e6;
+  --soft-yellow: #ffef99;
+  --white: #ffffff;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    24px
+    max(32px, env(safe-area-inset-bottom));
+  background: linear-gradient(160deg, var(--yellow) 0%, #ffe53d 45%, var(--light-bg) 100%);
+  color: var(--black);
+  font-family: "Poppins", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  box-sizing: border-box;
+}
+
+/* ---------- background shapes ---------- */
+.blob {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.blobTopRight {
+  top: 6%;
+  right: -18%;
+  width: 62vmin;
+  height: 62vmin;
+  background: radial-gradient(circle at 40% 40%, #ffe23a, #ffc800);
+  opacity: 0.55;
+}
+
+.blobBottomLeft {
+  bottom: -22%;
+  left: -26%;
+  width: 90vmin;
+  height: 90vmin;
+  background: radial-gradient(circle at 60% 30%, #ffd600, #ffb300);
+  opacity: 0.7;
+}
+
+.blobBottomRight {
+  right: -22%;
+  bottom: 4%;
+  width: 56vmin;
+  height: 56vmin;
+  background: radial-gradient(circle at 40% 40%, #ffd000, #ffa800);
+  opacity: 0.45;
+}
+
+.cube {
+  position: absolute;
+  z-index: -1;
+  right: 10%;
+  bottom: 30%;
+  width: clamp(48px, 14vmin, 84px);
+  aspect-ratio: 1;
+  border-radius: 22%;
+  background: linear-gradient(145deg, #ffe44d, #ffb800);
+  box-shadow: 0 14px 28px rgba(255, 170, 0, 0.35);
+  transform: rotate(18deg);
+}
+
+/* ---------- product images ---------- */
+.product {
+  position: absolute;
+  z-index: -1;
+  height: auto;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.22));
+  pointer-events: none;
+  user-select: none;
+}
+
+.headphones { top: 3%;    left: -6%;  width: clamp(110px, 38vw, 220px); }
+.phone      { top: 2%;    right: -8%; width: clamp(100px, 34vw, 200px); }
+.laptop     { bottom: 12%; left: -10%; width: clamp(150px, 52vw, 300px); }
+.charger    { bottom: 2%;  right: -6%; width: clamp(90px, 30vw, 180px); }
+
+/* ---------- brand block ---------- */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  animation: reveal 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.logo {
+  display: block;
+  width: clamp(160px, 50vw, 240px);
+  height: auto;
+  max-width: 100%;
+}
+
+.tagline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+  margin: 14px 0 0;
+  font-size: clamp(13px, 3.8vw, 17px);
+  font-weight: 500;
+  color: var(--dark-grey);
+}
+
+.tagline i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--black);
+}
+
+/* ---------- CTA ---------- */
+.next {
+  position: absolute;
+  left: 50%;
+  bottom: max(32px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(300px, calc(100% - 48px));
+  height: 60px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--black);
+  color: var(--white);
+  font: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(13, 13, 13, 0.28);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.next:hover {
+  background: var(--dark-grey);
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 28px rgba(13, 13, 13, 0.32);
+}
+
+.next:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+.next:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 3px;
+}
+
+/* ---------- motion ---------- */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand { animation: none; }
+  .next  { transition: none; }
+}
+
+/* ---------- larger screens: keep the phone-like composition ---------- */
+@media (min-width: 768px) {
+  .screen {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+}

@@ -1,0 +1,99 @@
+/* src/components/DealsSection/DealsSection.module.css */
+.section { margin-top: 16px; }
+
+/* 2 tiles across on mobile, 4 across on large screens */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+  padding: 10px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.dark { background: var(--black); color: var(--white); }
+.yellow { background: linear-gradient(135deg, var(--yellow), var(--soft-yellow)); color: var(--black); }
+
+.copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.lead { margin: 0; font-size: 0.7rem; font-weight: 500; }
+
+.title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: pre-line;
+}
+
+.big { font-size: 1.25rem; font-weight: 900; color: var(--yellow); }
+.yellow .big { color: var(--black); }
+
+.sub {
+  margin: 2px 0 8px;
+  font-size: 0.65rem;
+  line-height: 1.3;
+  opacity: 0.85;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* margin-top: auto keeps the button at the bottom so both tiles line up */
+.cta {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.dark .cta { background: var(--yellow); color: var(--black); }
+.yellow .cta { background: var(--black); color: var(--white); }
+
+/* artwork hidden on phones (tiles are too narrow), shown from 640px */
+.art { display: none; }
+
+@media (min-width: 640px) {
+  .grid { gap: 12px; }
+  .card { padding: 14px; min-height: 110px; }
+  .lead { font-size: 0.9rem; }
+  .title { font-size: 1rem; }
+  .big { font-size: 1.6rem; }
+  .sub { font-size: 0.8rem; }
+  .cta { padding: 6px 16px; font-size: 0.75rem; }
+  .art {
+    display: block;
+    position: absolute;
+    right: 8px;
+    bottom: 0;
+    height: 80%;
+    width: auto;
+    object-fit: contain;
+  }
+}
+
+@media (min-width: 1000px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

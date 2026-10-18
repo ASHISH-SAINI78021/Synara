@@ -1,0 +1,5 @@
+.row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.title { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 1rem; font-weight: 800; }
+.icon { display: inline-flex; }
+.link { display: inline-flex; align-items: center; gap: 2px; font-size: 0.78rem; font-weight: 600; color: var(--black); text-decoration: none; }
+.link:hover { text-decoration: underline; }

@@ -1,0 +1,108 @@
+/* src/components/ProductCard/ProductCard.module.css */
+
+/* ---------- phones: 4 across, cart button 36px overlapping the product ---------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  padding: 6px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.off {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 3;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: #fbe98a;
+  font-size: 0.54rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* image area: the image fills it, the button floats above it */
+.media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 78px;
+  margin: 16px 0 6px;
+}
+.media img {
+  position: relative;
+  z-index: 1;                       /* image layer */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.14));
+}
+.emoji { position: relative; z-index: 1; font-size: 2.4rem; line-height: 1; }
+
+/* cart button: 36px, overlaps the bottom-right of the product */
+.add {
+  position: absolute;
+  z-index: 2;                       /* sits above the image */
+  right: 0;
+  bottom: 0;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #fff;           /* white ring separates it from the photo */
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--black);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease;
+}
+.add svg { width: 18px; height: 18px; }
+.add:active { transform: scale(0.92); }
+
+.prices { margin: 0; display: flex; flex-direction: column; line-height: 1.15; }
+.prices strong { font-size: 0.76rem; font-weight: 800; }
+.prices del { font-size: 0.58rem; color: var(--muted); }
+
+.name {
+  margin: 3px 0 0;
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1.25;
+  min-height: 2.5em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rating { display: none; }   /* hidden on phones to save space */
+
+/* ---------- tablets and desktop: normal-size button, still overlapping ---------- */
+@media (min-width: 700px) {
+  .card { padding: 8px; }
+  .off { top: 6px; left: 6px; font-size: 0.58rem; padding: 2px 6px; }
+  .media { height: 96px; margin: 12px 0 8px; }
+  .emoji { font-size: 2.8rem; }
+  .add { right: 2px; bottom: 2px; width: 30px; height: 30px; }
+  .add svg { width: 15px; height: 15px; }
+  .add:hover { transform: scale(1.1); }
+  .prices strong { font-size: 0.9rem; }
+  .prices del { font-size: 0.64rem; }
+  .name { font-size: 0.75rem; }
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin: 4px 0 0;
+    font-size: 0.66rem;
+    color: var(--muted);
+  }
+  .rating strong { color: var(--black); font-weight: 700; }
+}
+
+@media (prefers-reduced-motion: reduce) { .add { transition: none; } }

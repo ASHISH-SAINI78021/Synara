@@ -1,0 +1,31 @@
+.header { position: sticky; top: 0; z-index: 20; background: var(--yellow); }
+.inner {
+  max-width: var(--page-max); margin: 0 auto; padding: 8px 16px;
+  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "brand loc actions" "search search search";
+  align-items: center; gap: 10px 14px;
+}
+.brand { grid-area: brand; display: flex; }
+.logo { height: 40px; width: auto; display: block; }
+.location {
+  grid-area: loc; display: flex; align-items: center; gap: 8px; justify-self: start;
+  background: none; border: 0; padding: 0; color: var(--black); text-align: left; min-width: 0;
+}
+.locText { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.locText strong { font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+.locText small { font-size: 0.7rem; color: var(--dark-grey); opacity: 0.8; white-space: nowrap; }
+.search {
+  grid-area: search; display: flex; align-items: center; gap: 10px;
+  background: var(--white); border-radius: 999px; padding: 0 18px; height: 42px; color: var(--muted);
+}
+.search input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; font-size: 0.9rem; min-width: 0; }
+.search:focus-within { box-shadow: 0 0 0 3px var(--black); }
+.actions { grid-area: actions; display: flex; align-items: center; gap: 14px; }
+.iconBtn { position: relative; display: inline-flex; color: var(--black); }
+.badge {
+  position: absolute; top: -8px; right: -10px; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: var(--black); color: var(--yellow);
+  font-size: 0.7rem; font-weight: 700; display: grid; place-items: center;
+}
+@media (min-width: 900px) {
+  .inner { grid-template-columns: auto auto minmax(280px, 1fr) auto; grid-template-areas: "brand loc search actions"; gap: 18px; padding: 10px 24px; }
+}

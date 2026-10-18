@@ -1,0 +1,130 @@
+.wrap { margin-bottom: 8px; }
+
+/* ---------- banner (mobile first) ---------- */
+.banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 300px;                 /* tall card on phones */
+  padding: 24px 20px 40px;/* extra bottom space so text sits slightly above centre */
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ffe81a 0%, #ffd600 55%, #ffc400 100%);
+}
+
+/* top circle */
+.banner::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 70%;
+  aspect-ratio: 1;
+  right: -8%;
+  top: -22%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* big bottom-right circle */
+.banner::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 85%;
+  aspect-ratio: 1;
+  right: -25%;
+  bottom: -45%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.text { position: relative; z-index: 1; max-width: 560px; }
+
+.kicker {
+  margin: 0 0 14px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 7vw, 2.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  white-space: pre-line;
+}
+
+.sub {
+  margin: 14px 0 24px;
+  font-size: 1rem; margin: 10px 0 18px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--black);
+  max-width: 14em;                   /* makes it wrap into 2 lines on mobile */
+}
+
+.cta {
+  height: 46px; padding: 0 26px; font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 999px;
+  background: var(--black);
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+.cta:hover { transform: translateY(-2px); }
+
+.art {
+  position: absolute;
+  z-index: 1;
+  right: 16px;
+  bottom: 0;
+  height: 90%;
+  width: auto;
+  max-width: 50%;
+  object-fit: contain;
+}
+
+/* ---------- dots ---------- */
+.dots { display: flex; justify-content: center; gap: 8px; padding: 12px 0 4px; }
+.dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #d9d5c4; transition: width 200ms ease, background 200ms ease; }
+.active { width: 22px; border-radius: 999px; background: var(--black); }
+
+/* ---------- desktop ---------- */
+@media (min-width: 800px) {
+  .banner {
+    min-height: 260px; 
+    padding: 32px 56px; 
+    border-radius: 20px;
+  }
+
+  /* top circle: sits near the middle, cut off by the top edge */
+  .banner::after {
+    width: 22%;
+    left: 43%;
+    right: auto;
+    top: -22%;
+  }
+
+  /* big bottom-right circle */
+  .banner::before {
+    width: 38%;
+    right: -3%;
+    bottom: -55%;
+  }
+
+  .kicker { font-size: 0.85rem; margin-bottom: 18px; }
+  .title { font-size: clamp(2.2rem, 3.6vw, 3rem); }
+  .sub { max-width: none; font-size: 1.15rem; margin: 12px 0 20px;  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta, .dot { transition: none; }
+}
