@@ -7,7 +7,7 @@ import ProfilePage from "./Pages/Profile/ProfilePage.jsx";
 import CategoriesPage from "./Pages/Categories/CategoriesPage.jsx";
 import CategoryListingPage from "./Pages/CategoryListingPage/CategoryListingPage.jsx";
 import RepairsPage from "./Pages/Repairs/RepairsPage.jsx";
-
+// new comment
 export default function App() {
   return (
     <Routes>
