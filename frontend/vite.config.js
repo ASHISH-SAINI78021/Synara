@@ -31,9 +31,20 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,ico,woff2}"],
+        // precache only the app shell; photos are cached when first viewed
+        globPatterns: ["**/*.{js,css,html,ico,woff2}"],
         navigateFallback: "/index.html",
         runtimeCaching: [
+          {
+            // product and repair photos: cache each one the first time it loads
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images",
+              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             // cache Google Fonts so the app looks right offline
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
