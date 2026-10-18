@@ -6,7 +6,7 @@
 // images: [a, b, c] -> optional extra photos for the product page gallery (see the note at the bottom).
 
 import headphones from "../assets/headphones.png";
-import smartWatch from "../assets/Smartwatch.png"
+import smartWatch from "../assets/smartWatch.png"
 import earBuds from "../assets/Earbuds.png"
 import bluetoothSpeaker from "../assets/bluetoothSpeaker.png"
 import powerBank from "../assets/powerBank.png"
