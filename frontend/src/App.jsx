@@ -6,7 +6,7 @@ import CartPage from "./Pages/Cart/CartPage.jsx";
 import ProfilePage from "./Pages/Profile/ProfilePage.jsx";
 import CategoriesPage from "./Pages/Categories/CategoriesPage.jsx";
 import CategoryListingPage from "./Pages/CategoryListingPage/CategoryListingPage.jsx";
-import RepairsPage from "./pages/Repairs/RepairsPage.jsx";
+import RepairsPage from "./Pages/Repairs/RepairsPage.jsx";
 
 export default function App() {
   return (
