@@ -7,11 +7,13 @@ import ProfilePage from "./Pages/Profile/ProfilePage.jsx";
 import CategoriesPage from "./Pages/Categories/CategoriesPage.jsx";
 import CategoryListingPage from "./Pages/CategoryListingPage/CategoryListingPage.jsx";
 import RepairsPage from "./Pages/Repairs/RepairsPage.jsx";
+import IntroPage from "./Pages/Intro/IntroPage";
 // new comment
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<SplashPage />} />
+      <Route path="/" element={<IntroPage />} />
+      <Route path="/welcome" element={<SplashPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/product/:id" element={<Product />} />
       <Route path="/cart" element={<CartPage />} />
