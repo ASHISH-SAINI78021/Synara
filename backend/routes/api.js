@@ -1,6 +1,7 @@
-
 import { Router } from "express";
-import { Product, Repair, CategoryGroup } from "./models.js";
+import { Product } from "../models/productModel.js";
+import { Repair } from "../models/repairModel.js";
+import { CategoryGroup } from "../models/categoryModel.js";
 
 const r = Router();
 

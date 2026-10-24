@@ -1,9 +1,10 @@
-// src/pages/Repairs/RepairsPage.jsx
+// src/Pages/Repairs/RepairsPage.jsx
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ClipboardList, Truck, CheckCircle2, Clock, ShieldCheck, BadgeCheck, CalendarDays } from "lucide-react";
-import { repairs } from "../../data/homeData";
+import { useCatalog } from "../../Context/CatalogContext";
 import { useCart } from "../../Context/CartContext";
+import { api } from "../../lib/api";
 import useStored from "../../hooks/useStored";
 import Header from "../../Components/Home/Header/Header.jsx";
 import BottomNav from "../../Components/Home/BottomNav/BottomNav.jsx";
@@ -28,6 +29,7 @@ const TRUST = [
 
 export default function RepairsPage() {
   const { count } = useCart();
+  const { repairs } = useCatalog(); // services now come from the backend
   const [params, setParams] = useSearchParams();
   const [bookings, setBookings] = useStored("synara-repair-bookings", []);
   const [active, setActive] = useState(null); // the service being booked
@@ -39,11 +41,25 @@ export default function RepairsPage() {
     const s = repairs.find((r) => String(r.id) === id);
     if (s) setActive(s);
     setParams({}, { replace: true });
-  }, [params, setParams]);
+  }, [params, setParams, repairs]);
 
-  const saveBooking = (b) => setBookings((list) => [b, ...list]);
-  const cancelBooking = (id) =>
-    setBookings((list) => list.map((b) => (b.id === id ? { ...b, status: "Cancelled" } : b)));
+  // saved on this phone first (so it always shows), then sent to your server
+  const saveBooking = (b) => {
+    setBookings((list) => [b, ...list]);
+    api("/bookings", { method: "POST", body: b }).catch((err) =>
+      console.warn("Booking was saved on this device but not sent to the server:", err)
+    );
+  };
+
+  const cancelBooking = (id) => {
+    const b = bookings.find((x) => x.id === id);
+    setBookings((list) => list.map((x) => (x.id === id ? { ...x, status: "Cancelled" } : x)));
+    if (b) {
+      api(`/bookings/${id}/cancel`, { method: "POST", body: { phone: b.phone } }).catch((err) =>
+        console.warn("Cancel was saved on this device but not sent to the server:", err)
+      );
+    }
+  };
 
   return (
     <>

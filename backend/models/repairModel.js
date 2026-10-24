@@ -1,9 +1,9 @@
+// models/repairModel.js
 import mongoose from "mongoose";
-const { Schema, model } = mongoose;
 
-const repairSchema = new Schema(
+const repairSchema = new mongoose.Schema(
   {
-    id: { type: String, required: true, unique: true },
+    id: { type: String, required: true, unique: true, trim: true },
     order: { type: Number, default: 0 },
     name: { type: String, required: true, trim: true },
     tags: [String],
@@ -11,8 +11,7 @@ const repairSchema = new Schema(
     emoji: String,
     image: String,
   },
-  { timestamps: true }
+  { strict: false, timestamps: true }
 );
 
-
-export const Repair = model("Repair", repairSchema);
+export const Repair = mongoose.model("Repair", repairSchema);

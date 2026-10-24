@@ -3,6 +3,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
+// where your Express backend runs while you develop (the PORT in backend/.env)
+const API_TARGET = "http://localhost:5000";
+
 export default defineConfig({
   plugins: [
     react(),
@@ -34,6 +37,8 @@ export default defineConfig({
         // precache only the app shell; photos are cached when first viewed
         globPatterns: ["**/*.{js,css,html,ico,woff2}"],
         navigateFallback: "/index.html",
+        // never answer API addresses with the app page
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             // product and repair photos: cache each one the first time it loads
@@ -55,4 +60,14 @@ export default defineConfig({
       },
     }),
   ],
+
+  // `npm run dev`: requests to /api/... are forwarded to your Express server
+  server: {
+    proxy: { "/api": API_TARGET },
+  },
+
+  // `npm run preview` (testing the production build locally): same forwarding
+  preview: {
+    proxy: { "/api": API_TARGET },
+  },
 });

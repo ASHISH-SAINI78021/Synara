@@ -1,41 +1,47 @@
-// src/context/CartContext.jsx
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { popular, accessories } from "../data/homeData";
+import { useCatalog } from "./CatalogContext";
 
 const KEY = "synara-cart";
 const MAX_QTY = 10;
 export const FREE_DELIVERY_MIN = 499; // sample rule, change when you have the real one
 export const DELIVERY_FEE = 30;       // sample fee
 
-const catalog = new Map([...popular, ...accessories].map((p) => [p.id, p]));
 const CartContext = createContext(null);
 
-// the cart is saved as [{ id, qty }] so prices always come fresh from homeData
+// saved as [{ id, qty }]; prices always come fresh from the catalog
 function load() {
   try {
-    const raw = localStorage.getItem(KEY);
-    const list = raw ? JSON.parse(raw) : [];
-    return Array.isArray(list) ? list.filter((l) => l && catalog.has(l.id) && l.qty > 0) : [];
+    const list = JSON.parse(localStorage.getItem(KEY));
+    return Array.isArray(list) ? list.filter((l) => l && l.id && l.qty > 0) : [];
   } catch {
     return [];
   }
 }
 
 export function CartProvider({ children }) {
+  const { getProduct, allProducts, fresh } = useCatalog();
   const [lines, setLines] = useState(load);
 
   useEffect(() => {
     try {
       localStorage.setItem(KEY, JSON.stringify(lines));
     } catch {
-      /* storage full or blocked: the cart still works for this session */
+      /* storage blocked: the cart still works for this session */
     }
   }, [lines]);
 
-  // add accepts a product object or just an id
+  // once the server confirmed the catalog, drop cart lines for products that no longer exist
+  useEffect(() => {
+    if (!fresh || !allProducts.length) return;
+    setLines((prev) => {
+      const next = prev.filter((l) => getProduct(l.id));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [fresh, allProducts, getProduct]);
+
   const add = useCallback((p) => {
     const id = typeof p === "string" ? p : p?.id;
-    if (!catalog.has(id)) return;
+    if (!id) return;
     setLines((prev) => {
       const found = prev.find((l) => l.id === id);
       if (found) return prev.map((l) => (l.id === id ? { ...l, qty: Math.min(MAX_QTY, l.qty + 1) } : l));
@@ -43,7 +49,6 @@ export function CartProvider({ children }) {
     });
   }, []);
 
-  // qty 0 (or less) removes the line
   const updateQty = useCallback((id, qty) => {
     setLines((prev) =>
       qty <= 0
@@ -56,7 +61,12 @@ export function CartProvider({ children }) {
   const clear = useCallback(() => setLines([]), []);
 
   const value = useMemo(() => {
-    const items = lines.map((l) => ({ ...catalog.get(l.id), qty: l.qty }));
+    const items = lines
+      .map((l) => {
+        const p = getProduct(l.id);
+        return p ? { ...p, qty: l.qty } : null;
+      })
+      .filter(Boolean);
     const count = items.reduce((n, i) => n + i.qty, 0);
     const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
     const mrpTotal = items.reduce((n, i) => n + (i.mrp > i.price ? i.mrp : i.price) * i.qty, 0);
@@ -71,7 +81,7 @@ export function CartProvider({ children }) {
     };
     const getQty = (id) => lines.find((l) => l.id === id)?.qty || 0;
     return { items, count, totals, getQty, add, updateQty, remove, clear };
-  }, [lines, add, updateQty, remove, clear]);
+  }, [lines, getProduct, add, updateQty, remove, clear]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
