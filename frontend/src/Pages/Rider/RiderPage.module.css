@@ -1,0 +1,45 @@
+.page{max-width:980px;margin:0 auto;padding:24px 16px 60px;color:#0d0d0d}.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.header h1{margin:3px 0;font-size:clamp(26px,5vw,36px);letter-spacing:-.04em}.eyebrow{font-size:11px;letter-spacing:.15em;font-weight:800;color:#8a7100;margin:0 0 8px}.panel{background:#fff;border:1px solid #f0df9b;border-radius:20px;padding:clamp(18px,4vw,28px);margin:18px 0;box-shadow:0 8px 28px #0d0d0d08}.page:has(.panel:first-child){min-height:90vh}.back{display:inline-block;text-decoration:none;color:#667085;margin-bottom:18px}.panel h2{margin:0 0 10px;font-size:22px}.muted{color:#667085;line-height:1.6;font-size:14px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:18px}.form label,.inlineLabel{display:grid;gap:7px;font-size:13px;font-weight:700;color:#38445a}.form input,.form select,.inlineLabel input{box-sizing:border-box;width:100%;min-width:0;border:1px solid #e6dba8;border-radius:10px;padding:11px 12px;font:inherit;font-weight:400;background:#fff}.form input[type=file]{font-size:12px}.primary,.secondary{border:0;border-radius:10px;padding:12px 15px;font-weight:750;cursor:pointer;align-self:end}.primary{background:#ffd600;color:#0d0d0d}.secondary{background:#fff3b0;color:#0d0d0d;border:1px solid #f0df9b}.form .primary{grid-column:1/-1}.uploaded{font-size:12px;color:#16834c}.error,.notice{padding:12px;border-radius:10px;font-size:13px;line-height:1.5}.error{background:#fff0f0;color:#a22}.notice{background:#effaf3;color:#21633b}.switch{font-size:13px;text-align:center;color:#667085}.switch button,.textBtn{border:0;background:none;color:#0d0d0d;font-weight:750;cursor:pointer}.small{font-size:12px;color:#7a8497}.status,.tag{display:inline-flex;border-radius:999px;background:#fff3b0;color:#0d0d0d;padding:5px 9px;font-size:10px;font-weight:800;letter-spacing:.04em}.pending{background:#fff6df;color:#8a5b00}.rejected,.suspended{background:#fff0f0;color:#a22}.approved{background:#eaf8ef;color:#21633b}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metrics div{padding:18px;border-radius:16px;background:#fff9e6;display:grid;gap:8px}.metrics span{font-size:12px;color:#667085}.metrics strong{font-size:23px;text-transform:capitalize}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:12px}.sectionHead h2{margin:0}.list{display:grid;gap:12px;margin-top:16px}.delivery{border:1px solid #f0df9b;border-radius:14px;padding:16px;display:grid;gap:9px}.delivery h3{margin:0;font-size:16px}.delivery p{margin:0;font-size:13px;overflow-wrap:anywhere}.deliveryTop{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.inlineLabel{margin:5px 0}.textBtn{justify-self:start;padding:7px 0}.footer{display:flex;justify-content:center;gap:12px;font-size:13px;color:#667085}.footer a{color:#0d0d0d}@media(max-width:620px){.form{grid-template-columns:1fr}.form .primary{grid-column:auto}.metrics{grid-template-columns:1fr 1fr}.metrics div:last-child{grid-column:1/-1}.header{align-items:flex-start}.deliveryTop{align-items:flex-start}}
+.sectionActions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Synara brand theme */
+.page{font-family:"Nunito Sans",system-ui,sans-serif;background:#fffdf6}.panel{box-shadow:0 8px 28px rgba(13,13,13,.05)}.primary{transition:transform .15s ease,filter .15s ease}.primary:hover{filter:brightness(.97);transform:translateY(-1px)}
+
+.buttonSpinner{display:inline-block;width:14px;height:14px;margin-right:9px;vertical-align:-2px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:synara-spin .7s linear infinite}button:disabled{opacity:.65;cursor:not-allowed}@keyframes synara-spin{to{transform:rotate(360deg)}}
+
+
+/* Mobile-first polish: compact controls without changing Synara branding */
+@media (max-width: 620px) {
+  .page { padding: 18px 12px 32px; }
+  .header { gap: 10px; margin-bottom: 16px; align-items: center; }
+  .header h1 { font-size: clamp(22px, 6vw, 29px); overflow-wrap: anywhere; }
+  .eyebrow { font-size: 10px; letter-spacing: .12em; }
+  .panel { padding: 15px; border-radius: 17px; margin: 14px 0; }
+  .panel h2 { font-size: 19px; line-height: 1.25; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  .metrics div { padding: 13px 12px; gap: 5px; border-radius: 14px; min-width: 0; }
+  .metrics span { font-size: 11px; }
+  .metrics strong { font-size: clamp(18px, 5vw, 22px); overflow-wrap: anywhere; }
+  .metrics div:last-child { grid-column: 1 / -1; }
+  .sectionHead { align-items: stretch; flex-direction: column; gap: 12px; }
+  .sectionHead h2 { font-size: 20px; }
+  .sectionActions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; }
+  .sectionActions button { min-width: 0; padding: 10px 9px; border-radius: 11px; font-size: 12px; line-height: 1.25; }
+  .sectionActions button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .list { gap: 10px; margin-top: 13px; }
+  .delivery { padding: 12px; gap: 8px; border-radius: 13px; }
+  .delivery h3 { font-size: 14px; overflow-wrap: anywhere; }
+  .delivery p { font-size: 12px; line-height: 1.45; }
+  .status, .tag { padding: 4px 8px; font-size: 10px; }
+  .primary, .secondary { padding: 10px 12px; border-radius: 10px; font-size: 13px; }
+  .footer { flex-wrap: wrap; gap: 8px 12px; font-size: 12px; }
+  .buttonSpinner { width: 12px; height: 12px; margin-right: 7px; }
+}
+@media (max-width: 380px) {
+  .page { padding-left: 10px; padding-right: 10px; }
+  .panel { padding: 12px; }
+  .header { align-items: flex-start; }
+  .header .secondary { padding: 9px 10px; font-size: 12px; white-space: nowrap; }
+  .sectionActions { grid-template-columns: 1fr; }
+  .sectionActions button:last-child:nth-child(odd) { grid-column: auto; }
+  .metrics div { padding: 11px 10px; }
+}

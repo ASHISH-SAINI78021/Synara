@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Pencil, ShoppingCart, Wrench, Heart, Package, MapPin, Headset,
-  Info, FileText, LogOut, ChevronRight, Plus, Trash2, User,
+  Info, FileText, LogOut, ChevronRight, Plus, Trash2, User, Bike,
 } from "lucide-react";
 import { useCart } from "../../Context/CartContext";
 import Header from "../../Components/Home/Header/Header.jsx";
@@ -35,7 +35,8 @@ function useStored(key, initial) {
 
 // menu rows: `to` = real page, no `to` = "Soon"
 const MENU = [
-  { label: "My orders", Icon: Package },
+  { label: "My orders", Icon: Package, to: "/orders" },
+  { label: "Become a rider", Icon: Bike, to: "/rider" },
   { label: "Repair bookings", Icon: Wrench, to: "/repairs" },
   { label: "Wishlist", Icon: Heart },
   { label: "Help & support", Icon: Headset },
@@ -96,6 +97,8 @@ export default function ProfilePage() {
     });
 
   const logout = () => {
+    localStorage.removeItem("synara-auth-token");
+    localStorage.removeItem("synara-auth-user");
     setProfile(DEFAULT_PROFILE);
     setAddresses(DEFAULT_ADDRESSES);
     navigate("/");

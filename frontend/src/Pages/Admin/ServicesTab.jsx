@@ -3,10 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { resolveImage } from "../../utils/resolveImage";
 import { Modal, Field } from "./AdminUI.jsx";
+import ImageUploader from "./ImageUploader.jsx";
 import styles from "./Admin.module.css";
 
 const inr = (n) => (typeof n === "number" ? `₹${n.toLocaleString("en-IN")}` : "");
-const EMPTY = { id: "", name: "", tags: "", price: "", emoji: "", image: "", order: "" };
+const EMPTY = { id: "", name: "", tags: "", price: "", emoji: "", images: [], order: "" };
 const str = (v) => (v == null ? "" : String(v));
 
 export default function ServicesTab({ call, notify, onChange }) {
@@ -42,7 +43,7 @@ export default function ServicesTab({ call, notify, onChange }) {
   const openEdit = (r) => {
     setForm({
       id: str(r.id), name: str(r.name), tags: (r.tags || []).join(", "),
-      price: str(r.price), emoji: str(r.emoji), image: str(r.image), order: str(r.order),
+      price: str(r.price), emoji: str(r.emoji), images: r.image ? [r.image] : [], order: str(r.order),
     });
     setFormError("");
     setEditing("edit");
@@ -60,7 +61,7 @@ export default function ServicesTab({ call, notify, onChange }) {
       tags: form.tags.split(",").map((s) => s.trim()).filter(Boolean),
       price: Number(form.price),
       emoji: form.emoji.trim(),
-      image: form.image.trim(),
+      image: form.images[0] || "",
       order: form.order.trim() === "" || isNaN(Number(form.order)) ? 0 : Number(form.order),
     };
     setSaving(true);
@@ -93,8 +94,6 @@ export default function ServicesTab({ call, notify, onChange }) {
       notify(`Could not delete: ${err.message}`);
     }
   };
-
-  const preview = resolveImage(form.image.trim());
 
   return (
     <section>
@@ -149,16 +148,14 @@ export default function ServicesTab({ call, notify, onChange }) {
               </Field>
               <Field label="Starting price (₹) *"><input value={form.price} onChange={set("price")} inputMode="decimal" /></Field>
               <Field label="Emoji"><input value={form.emoji} onChange={set("emoji")} /></Field>
-              <Field label="Photo" hint="A file name from src/assets, or a full https:// link" wide>
-                <input value={form.image} onChange={set("image")} />
-              </Field>
             </div>
-            {form.image.trim() ? (
-              <div className={styles.previewRow}>
-                <span className={styles.thumb}>{preview ? <img src={preview} alt="" /> : <span aria-hidden="true">❔</span>}</span>
-                <small>{preview ? "Photo found" : "Photo not found in src/assets: the emoji will show instead"}</small>
-              </div>
-            ) : null}
+            <ImageUploader
+              images={form.images}
+              onChange={(images) => setForm((f) => ({ ...f, images }))}
+              call={call}
+              max={1}
+              label="Photo"
+            />
             {formError ? <p className={styles.error} role="alert">{formError}</p> : null}
             <div className={styles.formBtns}>
               <button type="button" className={styles.ghost} onClick={() => setEditing(null)}>Cancel</button>

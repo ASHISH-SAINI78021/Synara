@@ -7,12 +7,15 @@
     "dev": "node --watch server.js",
     "start": "node server.js",
     "export": "node scripts/exportHomeData.mjs",
-    "seed": "node seed/seed.js"
+    "seed": "node seed/seed.js",
+    "migrate-images": "node scripts/migrateImages.js"
   },
   "dependencies": {
+    "cloudinary": "^2.11.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
-    "mongoose": "^9.11.4"
+    "mongoose": "^9.11.4",
+    "multer": "^2.5.0"
   }
 }

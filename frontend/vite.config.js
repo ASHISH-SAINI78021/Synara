@@ -42,7 +42,9 @@ export default defineConfig({
         runtimeCaching: [
           {
             // product and repair photos: cache each one the first time it loads
-            urlPattern: ({ request }) => request.destination === "image",
+            // (map tiles are left out, otherwise they would push the product photos out of this cache)
+            urlPattern: ({ request, url }) =>
+              request.destination === "image" && !url.hostname.endsWith("tile.openstreetmap.org"),
             handler: "CacheFirst",
             options: {
               cacheName: "images",

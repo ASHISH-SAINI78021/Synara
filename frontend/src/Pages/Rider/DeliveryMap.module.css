@@ -1,0 +1,28 @@
+/* src/Pages/Rider/DeliveryMap.module.css */
+.wrap {
+  position: relative;
+  isolation: isolate;               /* keeps the map's layers from covering headers or dialogs */
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--light-bg);
+}
+.map {
+  width: 100%;
+  height: 190px;                    /* compact on phones */
+  font-family: inherit;
+}
+
+/* pins (drawn inside the map by Leaflet) */
+.pinWrap { background: none; border: 0; }
+.pinBody { stroke: var(--white); stroke-width: 1.5; }
+.customerPin { filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35)); }
+.customerPin .pinBody { fill: var(--black); }
+.customerPin .pinDot { fill: var(--yellow); }
+.riderPin { filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35)); }
+.riderPin .pinBody { fill: var(--yellow); stroke: var(--black); }
+.riderPin .pinDot { fill: var(--black); }
+
+@media (min-width: 700px) {
+  .map { height: 260px; }
+}

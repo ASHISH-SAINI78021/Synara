@@ -11,6 +11,9 @@ import CategoryListingPage from "./Pages/CategoryListingPage/CategoryListingPage
 import RepairsPage from "./Pages/Repairs/RepairsPage.jsx";
 import IntroPage from "./Pages/Intro/IntroPage.jsx";
 import AdminPage from "./Pages/Admin/AdminPage.jsx";
+import AuthPage from "./Pages/Auth/AuthPage.jsx";
+import RiderPage from "./Pages/Rider/RiderPage.jsx";
+import OrdersPage from "./Pages/Orders/OrdersPage.jsx";
 
 export default function App() {
   return (
@@ -30,7 +33,13 @@ export default function App() {
         <Route path="/repairs" element={<RepairsPage />} />
       </Route>
 
-      {/* admin page */}
+      {/* account, rider delivery portal and admin */}
+      {/* Customer authentication: /account defaults to login; /login and /register are direct links */}
+      <Route path="/account" element={<AuthPage />} />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/register" element={<AuthPage />} />
+      <Route path="/rider" element={<RiderPage />} />
+      <Route path="/orders" element={<OrdersPage />} />
       <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );

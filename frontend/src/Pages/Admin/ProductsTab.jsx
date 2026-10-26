@@ -3,24 +3,28 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { resolveImage } from "../../utils/resolveImage";
 import { Modal, Field } from "./AdminUI.jsx";
+import ImageUploader from "./ImageUploader.jsx";
 import styles from "./Admin.module.css";
 
 const inr = (n) => (typeof n === "number" ? `₹${n.toLocaleString("en-IN")}` : "");
 
 const EMPTY = {
   id: "", section: "popular", order: "", name: "", price: "", mrp: "", off: "", rating: "", reviews: "",
-  emoji: "", image: "", unit: "1 unit", stock: "", delivery: "Same day", brand: "Synara", category: "",
+  emoji: "", images: [], unit: "1 unit", stock: "", delivery: "Same day", brand: "Synara", category: "",
   description: "", highlights: "", specs: "", offerText: "", offerCode: "", offerMore: "",
   replacement: "", warranty: "",
 };
 
 const str = (v) => (v == null ? "" : String(v));
 
+// the photos of a product: the gallery list, or just the main photo for older products
+const imagesOf = (p) => (Array.isArray(p.images) && p.images.length ? p.images : p.image ? [p.image] : []);
+
 function toForm(p) {
   return {
     id: str(p.id), section: str(p.section), order: str(p.order), name: str(p.name),
     price: str(p.price), mrp: str(p.mrp), off: str(p.off), rating: str(p.rating), reviews: str(p.reviews),
-    emoji: str(p.emoji), image: str(p.image), unit: str(p.unit), stock: str(p.stock),
+    emoji: str(p.emoji), images: imagesOf(p), unit: str(p.unit), stock: str(p.stock),
     delivery: str(p.delivery), brand: str(p.brand),
     category: Array.isArray(p.category) ? p.category.join(", ") : str(p.category),
     description: str(p.description),
@@ -52,7 +56,8 @@ function toPayload(f) {
     rating: num(f.rating),
     reviews,
     emoji: f.emoji.trim(),
-    image: f.image.trim(),
+    image: f.images[0] || "",
+    images: f.images,
     unit: f.unit.trim(),
     stock: num(f.stock),
     delivery: f.delivery.trim(),
@@ -171,8 +176,6 @@ export default function ProductsTab({ call, notify, onChange }) {
     }
   };
 
-  const preview = resolveImage(form.image.trim());
-
   return (
     <section>
       <div className={styles.toolbar}>
@@ -264,19 +267,13 @@ export default function ProductsTab({ call, notify, onChange }) {
               <Field label="Emoji" hint="Shown when there is no photo">
                 <input value={form.emoji} onChange={set("emoji")} />
               </Field>
-              <Field label="Photo" hint="A file name from src/assets (e.g. neckband.png) or a full https:// link">
-                <input value={form.image} onChange={set("image")} />
-              </Field>
             </div>
 
-            {form.image.trim() ? (
-              <div className={styles.previewRow}>
-                <span className={styles.thumb}>
-                  {preview ? <img src={preview} alt="" /> : <span aria-hidden="true">❔</span>}
-                </span>
-                <small>{preview ? "Photo found" : "Photo not found in src/assets: the emoji will show instead"}</small>
-              </div>
-            ) : null}
+            <ImageUploader
+              images={form.images}
+              onChange={(images) => setForm((f) => ({ ...f, images }))}
+              call={call}
+            />
 
             <details className={styles.more}>
               <summary>More details (optional)</summary>

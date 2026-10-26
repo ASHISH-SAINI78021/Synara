@@ -2,6 +2,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Clock, Gift, House, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "../../Context/CartContext";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/api.js";
 import { popular, accessories } from "../../data/homeData";
 import SimilarProducts from "../../Components/SimilarProduct/SimilarProducts.jsx";
 import styles from "./Cart.module.css";
@@ -11,7 +13,67 @@ const everything = [...popular, ...accessories];
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const { items, count, totals, add, updateQty, remove } = useCart();
+  const { items, count, totals, add, updateQty, remove, clear } = useCart();
+  const [showCheckout, setShowCheckout] = useState(() => new URLSearchParams(window.location.search).get("checkout") === "1");
+  const [address, setAddress] = useState("Safidon, Haryana");
+  const [zone, setZone] = useState("Safidon");
+  const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+  const [placedOrder, setPlacedOrder] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const authenticated = Boolean(authUser && authUser.role === "customer");
+
+  // Validate the saved token with the backend; localStorage alone is not proof of login.
+  useEffect(() => {
+    let cancelled = false;
+    const token = localStorage.getItem("synara-auth-token");
+    if (!token) {
+      setAuthUser(null);
+      setAuthChecked(true);
+      return () => { cancelled = true; };
+    }
+    api("/auth/me")
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.user?.role !== "customer") {
+          setAuthUser(null);
+          localStorage.removeItem("synara-auth-token");
+          localStorage.removeItem("synara-auth-user");
+        } else {
+          setAuthUser(data.user);
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setAuthUser(null);
+        localStorage.removeItem("synara-auth-token");
+        localStorage.removeItem("synara-auth-user");
+      })
+      .finally(() => {
+        if (!cancelled) setAuthChecked(true);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) { setCheckoutError("Location is not supported by this browser."); return; }
+    navigator.geolocation.getCurrentPosition(({ coords }) => { setLocation({ lat: coords.latitude, lng: coords.longitude }); setCheckoutError(""); }, () => setCheckoutError("Location permission was not granted. You can still order using your address."), { enableHighAccuracy: true, timeout: 10000 });
+  };
+
+  const placeOrder = async () => {
+    if (!authenticated) {
+      navigate(`/account?next=${encodeURIComponent("/cart?checkout=1")}`);
+      return;
+    }
+    setCheckoutBusy(true); setCheckoutError("");
+    try {
+      const result = await api("/orders", { method: "POST", body: { items: items.map((item) => ({ id: item.id, qty: item.qty })), address, zone, location, paymentMethod: "cod" } });
+      setPlacedOrder({ order: result.order, deliveryOtp: result.deliveryOtp });
+      clear(); setShowCheckout(false);
+    } catch (err) { setCheckoutError(err.message); } finally { setCheckoutBusy(false); }
+  };
 
   const inCart = new Set(items.map((i) => i.id));
   const notInCart = everything.filter((p) => !inCart.has(p.id));
@@ -34,6 +96,10 @@ export default function CartPage() {
       {count > 0 ? <span className={styles.topCount}>{count} {count === 1 ? "item" : "items"}</span> : null}
     </header>
   );
+
+  if (placedOrder) {
+    return <div className={styles.page}>{topbar}<section className={styles.empty}><span className={styles.emptyIcon}><ShoppingBag size={40} aria-hidden="true" /></span><h2>Order placed successfully</h2><p>Order ID: <strong>{placedOrder.order.orderId}</strong></p><p>Keep this delivery OTP private and share it only when your rider arrives: <strong>{placedOrder.deliveryOtp}</strong></p><p>Cash on delivery · Total {inr(placedOrder.order.total)}</p><Link to="/profile" className={styles.shopBtn}>Go to profile</Link></section></div>;
+  }
 
   /* ---------- empty cart ---------- */
   if (items.length === 0) {
@@ -165,6 +231,32 @@ export default function CartPage() {
         ) : null}
       </section>
 
+      {placedOrder ? (
+        <section className={styles.card} role="status">
+          <h2 className={styles.heading}>Order placed successfully</h2>
+          <p>Order ID: <strong>{placedOrder.order.orderId}</strong></p>
+          <p>Keep this delivery OTP private and share it only when your rider arrives: <strong>{placedOrder.deliveryOtp}</strong></p>
+          <p>Payment method: Cash on delivery · Total: {inr(placedOrder.order.total)}</p>
+          <button type="button" className={styles.payBtn} onClick={() => navigate("/profile")}>View my profile</button>
+        </section>
+      ) : null}
+
+      {showCheckout ? (
+        <section className={styles.card}>
+          <h2 className={styles.heading}>Delivery details</h2>
+          {!authChecked ? <p>Checking your customer account…</p> : !authenticated ? <p>You must register or sign in as a customer before placing an order. <Link to={`/account?next=${encodeURIComponent("/cart?checkout=1")}`}>Register or log in</Link>.</p> : (
+            <>
+              <label className={styles.addrText}>Delivery address<input value={address} onChange={(e) => setAddress(e.target.value)} maxLength={500} required /></label>
+              <label className={styles.addrText}>Delivery zone<input value={zone} onChange={(e) => setZone(e.target.value)} maxLength={80} required /></label>
+              <button type="button" className={styles.change} onClick={useCurrentLocation}>{location ? "Location added ✓" : "Use current location for nearby rider matching"}</button>
+              <p className={styles.sub}>Payment: Cash on delivery. Online payment is not configured yet. Location is optional.</p>
+              {checkoutError ? <p role="alert">{checkoutError}</p> : null}
+              <button type="button" className={styles.payBtn} onClick={placeOrder} disabled={checkoutBusy || !address.trim() || !zone.trim()}>{checkoutBusy ? "Placing order…" : `Place order · ${inr(totals.grand)}`}</button>
+            </>
+          )}
+        </section>
+      ) : null}
+
       {/* ---------- fixed bottom: address + pay ---------- */}
       <div className={styles.bar}>
         <div className={styles.barInner}>
@@ -181,15 +273,18 @@ export default function CartPage() {
             type="button"
             className={styles.payBtn}
             onClick={() => {
-              /* TODO: go to the payment page when it exists */
+              if (!authChecked) return;
+              if (!authenticated) navigate(`/account?next=${encodeURIComponent("/cart?checkout=1")}`);
+              else setShowCheckout((v) => !v);
             }}
+            disabled={!authChecked}
           >
             <span className={styles.payTotal}>
               <strong>{inr(totals.grand)}</strong>
               <small>TOTAL</small>
             </span>
             <span className={styles.payText}>
-              Select Payment Method <ChevronRight size={18} aria-hidden="true" />
+              {!authChecked ? "Checking account…" : showCheckout ? "Hide checkout" : authenticated ? "Continue to checkout" : "Register / sign in to checkout"} <ChevronRight size={18} aria-hidden="true" />
             </span>
           </button>
         </div>

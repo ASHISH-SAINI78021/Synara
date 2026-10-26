@@ -1,0 +1,32 @@
+/* src/Pages/Rider/CustomerLocation.module.css */
+.box { display: grid; gap: 8px; margin: 8px 0; min-width: 0; }
+
+.buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: none;            /* this class is also used on a link */
+  cursor: pointer;
+}
+.btn:disabled { opacity: 0.55; cursor: default; }
+
+/* the Navigate link is the main action: yellow */
+.navigate { background: var(--yellow); border-color: var(--yellow); color: var(--black); }
+
+.under { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.dist { font-size: 0.74rem; font-weight: 700; color: var(--dark-grey); }
+
+.note { margin: 0; font-size: 0.72rem; color: var(--muted); }
+.error { margin: 0; font-size: 0.74rem; font-weight: 700; color: var(--red); }

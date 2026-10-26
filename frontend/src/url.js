@@ -1,0 +1,1 @@
+export const BACKEND_URL = "https://synara-8mre.onrender.com";
