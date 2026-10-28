@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Search, ShoppingBag } from "lucide-react";
-import { categoryGroups } from "../../data/homeData";
+import { useCatalog } from "../../Context/CatalogContext";
 import { useCart } from "../../Context/CartContext";
 import Header from "../../Components/Home/Header/Header.jsx";
 import BottomNav from "../../Components/Home/BottomNav/BottomNav.jsx";
@@ -11,6 +11,7 @@ import styles from "./Categories.module.css";
 
 export default function CategoriesPage() {
   const { count } = useCart();
+  const { categoryGroups } = useCatalog();
   const [q, setQ] = useState("");
 
   // filter tiles by name; hide groups that end up empty
@@ -20,7 +21,7 @@ export default function CategoriesPage() {
     return categoryGroups
       .map((g) => ({ ...g, items: g.items.filter((i) => i.name.toLowerCase().includes(t)) }))
       .filter((g) => g.items.length > 0);
-  }, [q]);
+  }, [q, categoryGroups]);
 
   return (
     <>

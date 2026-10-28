@@ -1,16 +1,14 @@
 // src/pages/Categories/CategoryListingPage.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { categoryGroups, popular, accessories } from "../../data/homeData";
+import { useCatalog } from "../../Context/CatalogContext";
 import { useCart } from "../../Context/CartContext";
 import Header from "../../Components/Home/Header/Header.jsx";
 import BottomNav from "../../Components/Home/BottomNav/BottomNav.jsx";
 import ProductCard from "../../Components/Home/ProductCard/ProductCard.jsx";
 import styles from "./CategoryListing.module.css";
 
-const allProducts = [...popular, ...accessories];
 const ALL = { id: "all", name: "All products", emoji: "🛍️", image: null };
-const cats = [ALL, ...categoryGroups.flatMap((g) => g.items)];
 
 const SORTS = [
   { id: "relevance", label: "Relevance" },
@@ -19,16 +17,28 @@ const SORTS = [
   { id: "rating", label: "Top rated" },
 ];
 
+// "Smart Watches", "smart-watches", "smart watch" and "SMARTWATCH" all compare equal
+const norm = (v) => String(v ?? "").toLowerCase().replace(/[^a-z0-9]/g, "").replace(/s$/, "");
+
 /*
   Which products belong to a category?
-  1) Best: give each product a `category` in homeData.js, e.g. category: "chargers".
-  2) Until then: match the category's words against the product name.
+  1) A product's `category` (set in Admin) is matched against the category id OR name,
+     ignoring case, spaces, dashes and plural "s".
+  2) If the product has no category, or its category isn't one of the shop's categories
+     (a typo), fall back to matching the category's words against the product name.
 */
-function belongs(p, cat) {
+function belongs(p, cat, cats) {
   if (cat.id === "all") return true;
-  if (p.category) {
-    return Array.isArray(p.category) ? p.category.includes(cat.id) : p.category === cat.id;
+
+  const list = (Array.isArray(p.category) ? p.category : [p.category]).filter(Boolean);
+  if (list.length) {
+    const wanted = new Set([norm(cat.id), norm(cat.name)]);
+    if (list.some((c) => wanted.has(norm(c)))) return true;
+
+    const known = new Set(cats.flatMap((c) => [norm(c.id), norm(c.name)]));
+    if (list.some((c) => known.has(norm(c)))) return false; // belongs to a different, valid category
   }
+
   const hay = String(p.name || "").toLowerCase().replace(/\s+/g, "");
   return String(cat.name)
     .toLowerCase()
@@ -41,6 +51,9 @@ function belongs(p, cat) {
 export default function CategoryListingPage() {
   const { slug } = useParams();
   const { count, add } = useCart();
+  // same backend data the home page uses (not the bundled sample list)
+  const { allProducts, categoryGroups } = useCatalog();
+  const cats = useMemo(() => [ALL, ...categoryGroups.flatMap((g) => g.items)], [categoryGroups]);
   const [sort, setSort] = useState("relevance");
   const activeRef = useRef(null);
 
@@ -55,12 +68,12 @@ export default function CategoryListingPage() {
 
   const products = useMemo(() => {
     if (!cat) return [];
-    const list = allProducts.filter((p) => belongs(p, cat));
+    const list = allProducts.filter((p) => belongs(p, cat, cats));
     if (sort === "low") return [...list].sort((a, b) => a.price - b.price);
     if (sort === "high") return [...list].sort((a, b) => b.price - a.price);
     if (sort === "rating") return [...list].sort((a, b) => (b.rating || 0) - (a.rating || 0));
     return list;
-  }, [cat, sort]);
+  }, [cat, cats, allProducts, sort]);
 
   if (!cat) {
     return (

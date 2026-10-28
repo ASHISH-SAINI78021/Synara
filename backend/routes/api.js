@@ -133,5 +133,113 @@ function crud(path, Model) {
 crud("/products", Product);
 crud("/repairs", Repair);
 
+
+
+
+
+
+
+
+
+
+
+/**
+ * CATEGORY GROUP MANAGEMENT
+ * Uses the existing CategoryGroup model.
+ * Mounted under /api.
+ */
+
+// Create a category group
+r.post("/categories", requireAdmin, async (req, res) => {
+  try {
+    const { id, title, items = [], order = 0 } = req.body || {};
+
+    if (!id?.trim() || !title?.trim()) {
+      return res.status(400).json({
+        error: "Category group ID and title are required",
+      });
+    }
+
+    if (!Array.isArray(items)) {
+      return res.status(400).json({
+        error: "Category items must be an array",
+      });
+    }
+
+    const record = await CategoryGroup.create({
+      id: id.trim(),
+      title: title.trim(),
+      order: Number(order) || 0,
+      items: items.map((item) => ({
+        id: String(item.id || "").trim(),
+        name: String(item.name || "").trim(),
+        emoji: String(item.emoji || ""),
+        image: String(item.image || ""),
+      })),
+    });
+
+    res.status(201).json(record);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Update a category group; its ID stays unchanged
+r.put("/categories/:id", requireAdmin, async (req, res) => {
+  try {
+    const { title, items, order } = req.body || {};
+    const changes = {};
+
+    if (title !== undefined) changes.title = String(title).trim();
+    if (items !== undefined) {
+      if (!Array.isArray(items)) {
+        return res.status(400).json({
+          error: "Category items must be an array",
+        });
+      }
+
+      changes.items = items.map((item) => ({
+        id: String(item.id || "").trim(),
+        name: String(item.name || "").trim(),
+        emoji: String(item.emoji || ""),
+        image: String(item.image || ""),
+      }));
+    }
+    if (order !== undefined) changes.order = Number(order) || 0;
+
+    const record = await CategoryGroup.findOneAndUpdate(
+      { id: req.params.id },
+      changes,
+      { new: true, runValidators: true }
+    );
+
+    if (!record) {
+      return res.status(404).json({ error: "Category group not found" });
+    }
+
+    res.json(record);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Delete a category group
+r.delete("/categories/:id", requireAdmin, async (req, res) => {
+  try {
+    const record = await CategoryGroup.findOneAndDelete({
+      id: req.params.id,
+    });
+
+    if (!record) {
+      return res.status(404).json({ error: "Category group not found" });
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
 // Export the router
 export default r;

@@ -10,6 +10,7 @@ import {
   Lock,
   Bike,
   BarChart3,
+  Tags,
 } from "lucide-react";
 
 import { api } from "../../lib/api";
@@ -18,6 +19,7 @@ import ServicesTab from "./ServicesTab.jsx";
 import BookingsTab from "./BookingsTab.jsx";
 import AnalyticsTab from "./AnalyticsTab.jsx";
 import RidersTab from "./RidersTab.jsx";
+import CategoriesTab from "./CategoriesTab.jsx";
 import styles from "./Admin.module.css";
 
 const STORE_KEY = "synara-admin-key";
@@ -269,6 +271,11 @@ export default function AdminPage() {
       label: "Riders & deliveries",
       Icon: Bike,
     },
+    {
+  id: "categories",
+  label: "Categories",
+  Icon: Tags,
+},
   ];
 
   return (
@@ -367,6 +374,14 @@ export default function AdminPage() {
             onChange={loadStats}
           />
         )}
+
+        {tab === "categories" && (
+  <CategoriesTab
+    call={call}
+    notify={notify}
+    onChange={loadStats}
+  />
+)}
       </main>
 
       {toast && (
