@@ -147,6 +147,27 @@ export default function ProductPage() {
                   </li>
                 ))}
               </ul>
+
+              {images.length > 1 ? (
+                <>
+                  <button
+                    type="button"
+                    className={`${styles.arrow} ${styles.arrowPrev}`}
+                    aria-label="Previous image"
+                    onClick={() => goTo((active - 1 + images.length) % images.length)}
+                  >
+                    <ChevronLeft size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.arrow} ${styles.arrowNext}`}
+                    aria-label="Next image"
+                    onClick={() => goTo((active + 1) % images.length)}
+                  >
+                    <ChevronRight size={22} />
+                  </button>
+                </>
+              ) : null}
             </div>
 
             {images.length > 1 ? (
