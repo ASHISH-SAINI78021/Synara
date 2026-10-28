@@ -5,14 +5,13 @@ import {
   ChevronLeft, ChevronRight, Heart, Share2, Clock, Star, Package,
   Tag, RefreshCcw, ShieldCheck, Minus, Plus, Check,
 } from "lucide-react";
-import { popular, accessories } from "../../data/homeData";
+import { useCatalog } from "../../Context/CatalogContext";
 import { useCart } from "../../Context/CartContext";
 import Header from "../../Components/Home/Header/Header.jsx";
 import SimilarProducts from "../../Components/SimilarProduct/SimilarProducts.jsx";
 import styles from "./Product.module.css";
 
 const inr = (n) => (typeof n === "number" ? `₹${n.toLocaleString("en-IN")}` : "");
-const allProducts = [...popular, ...accessories];
 
 function getImages(p) {
   if (Array.isArray(p.images) && p.images.length) return p.images;
@@ -22,6 +21,8 @@ function getImages(p) {
 export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  // use the SAME catalog the home page uses (backend data), not the bundled sample list
+  const { popular, accessories, allProducts } = useCatalog();
   const trackRef = useRef(null);
   const detailsRef = useRef(null);
   const [active, setActive] = useState(0);
@@ -39,7 +40,7 @@ export default function ProductPage() {
     trackRef.current?.scrollTo({ left: 0 });
   }, [id]);
 
-  const product = allProducts.find((p) => p.id === id);
+  const product = allProducts.find((p) => String(p.id) === String(id));
 
   if (!product) {
     return (

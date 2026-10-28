@@ -2,7 +2,7 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { Star, Clock, Package, ChevronRight } from "lucide-react";
-import { popular, accessories } from "../../data/homeData.js";
+import { useCatalog } from "../../Context/CatalogContext";
 import styles from "./SimilarProducts.module.css";
 
 const inr = (n) => (typeof n === "number" ? `₹${n.toLocaleString("en-IN")}` : "");
@@ -15,6 +15,7 @@ export default function SimilarProducts({
   seeAll = true,           // show the "See all products" bar
   onAdd,
 }) {
+  const { popular, accessories } = useCatalog(); // same data the home page shows
   const titleId = useId();
   const [justAdded, setJustAdded] = useState(null);
 
