@@ -12,7 +12,7 @@ import orders from "./routes/orders.js";
 import riders from "./routes/riders.js";
 import riderUploads from "./routes/riderUploads.js";
 const app = express();
-const origins = (process.env.CORS_ORIGINS || "https://synara.co.in/" || "http://localhost:5173").split(",").map((o) => o.trim()).filter(Boolean);
+const origins = (process.env.CORS_ORIGINS || "https://synara.co.in" || "http://localhost:5173").split(",").map((o) => o.trim()).filter(Boolean);
 app.use(cors({ origin: origins }));
 app.use(express.json({ limit: "1mb" }));
 app.use("/api/uploads", uploads);
